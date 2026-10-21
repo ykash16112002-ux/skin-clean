@@ -1,51 +1,47 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Manrope", "Montserrat", system-ui, -apple-system, sans-serif;
-  --font-serif: "Manrope", "Montserrat", system-ui, -apple-system, sans-serif;
-  --font-script: "Cormorant Garamond", Georgia, serif;
-  --color-sand-50: #FCFBF9;
-  --color-sand-100: #FBF9F5;
-  --color-sand-200: #F3EEE6;
-  --color-sand-300: #EBE3D7;
-  --color-sand-400: #DCD2C3;
-  --color-sand-500: #C4B5A0;
-  --color-mocha-900: #1C1917;
-  --color-mocha-800: #2A2521;
-  --color-mocha-700: #423B35;
-  --color-gold-300: #E6CEAE;
-  --color-gold-400: #D5B48A;
-  --color-gold-500: #BF9B6B;
+  --font-sans: "Montserrat", system-ui, -apple-system, sans-serif;
+  --font-mono: "Space Mono", monospace, Courier, monospace;
+  --font-display: "Paytone One", "Syne", "Montserrat", sans-serif;
+  --font-syne: "Syne", "Paytone One", sans-serif;
+
+  --color-soil-green: #506D44;
+  --color-soil-dark: #3B5232;
+  --color-soil-olive: #8EA654;
+  --color-soil-lime: #CAD86B;
+  --color-soil-cream: #FFFDF9;
+  --color-soil-sand: #FAF7F0;
+  --color-soil-orange: #FFA800;
+  --color-soil-rust: #E7502B;
+  --color-soil-earth: #42352B;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: "Manrope", "Montserrat", system-ui, -apple-system, sans-serif;
-    font-size: 17px;
-    line-height: 1.65;
-    background-color: #FBF9F5;
-    color: #1C1917;
+    font-family: "Montserrat", system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    font-family: "Manrope", "Montserrat", system-ui, -apple-system, sans-serif;
-    font-size: 1.05rem;
-    line-height: 1.65;
-    color: #1C1917;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Manrope", "Montserrat", system-ui, -apple-system, sans-serif;
-    letter-spacing: -0.01em;
-    color: #1C1917;
+    font-family: "Montserrat", system-ui, -apple-system, sans-serif;
+    color: #263514;
+    background-color: #1C2814;
   }
 }
 
-.font-script {
-  font-family: var(--font-script);
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-custom {
+  font-family: var(--font-mono);
+}
+
+.font-syne {
+  font-family: var(--font-syne);
 }
 
 /* Custom subtle scrollbar */
@@ -54,12 +50,9 @@
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #F3EEE6;
+  background: #2D3E25;
 }
 ::-webkit-scrollbar-thumb {
-  background: #DCD2C3;
+  background: #8EA654;
   border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #C4B5A0;
 }
