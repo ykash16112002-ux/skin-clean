@@ -1,4 +1,5 @@
 import React from 'react';
+import { resolveAssetUrl } from '../utils/mediaStorage.ts';
 
 export type VisualCrop =
   | 'hero-face'
@@ -132,7 +133,7 @@ export const RefVisual: React.FC<RefVisualProps> = ({
   return (
     <div className={`relative overflow-hidden bg-[#F3EEE6] ${className}`} role="img" aria-label={alt}>
       <img
-        src="/assets/aistudio/image_72db1020.png"
+        src={resolveAssetUrl('assets/aistudio/image_72db1020.png')}
         alt={alt}
         referrerPolicy="no-referrer"
         loading="lazy"

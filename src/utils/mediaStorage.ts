@@ -1,3 +1,27 @@
+/**
+ * Resolves an asset path to support deployment on any subpath (e.g. GitHub Pages /skin-clean/)
+ * or root domain without broken absolute URLs.
+ */
+export function resolveAssetUrl(path: string): string {
+  if (!path) return '';
+  if (
+    path.startsWith('data:') ||
+    path.startsWith('blob:') ||
+    path.startsWith('http://') ||
+    path.startsWith('https://')
+  ) {
+    return path;
+  }
+  const cleanPath = path.replace(/^(\.\/|\/)+/, '');
+  // Vite sets import.meta.env.BASE_URL to './' or subpath during build
+  const metaEnv = typeof import.meta !== 'undefined' && 'env' in import.meta 
+    ? (import.meta as { env?: { BASE_URL?: string } }).env 
+    : undefined;
+  const base = metaEnv?.BASE_URL || './';
+  const prefix = base.endsWith('/') ? base : `${base}/`;
+  return `${prefix}${cleanPath}`;
+}
+
 export type ImageSlotKey =
   | 'hero'
   | 'philosophy_foam'
@@ -26,7 +50,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Главный экран',
     recommendedRatio: '16:9 или 21:9',
     description: 'Фоновое бьюти-фото чистой кожи или модели крупным планом',
-    defaultSrc: '/assets/clinic/hero_face.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/hero_face.png'),
   },
   {
     key: 'philosophy_foam',
@@ -34,7 +58,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Философия',
     recommendedRatio: '3:4 (вертикальное)',
     description: 'Лицо с легкой очищающей пенкой или процедура ухода',
-    defaultSrc: '/assets/clinic/foam_cleansing.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/foam_cleansing.png'),
   },
   {
     key: 'philosophy_glow',
@@ -42,7 +66,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Философия',
     recommendedRatio: '1:1 или 4:3',
     description: 'Макро сияния скулы, капля сыворотки на коже',
-    defaultSrc: '/assets/clinic/droplet_glow.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/droplet_glow.png'),
   },
   {
     key: 'philosophy_texture',
@@ -50,7 +74,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Философия',
     recommendedRatio: '1:1',
     description: 'Фактура косметического средства или наконечник аппарата',
-    defaultSrc: '/assets/clinic/serum_texture.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/serum_texture.png'),
   },
   {
     key: 'direction_antiage',
@@ -58,7 +82,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Направления',
     recommendedRatio: '4:3',
     description: 'Естественная текстура кожи вокруг глаз, омоложение',
-    defaultSrc: '/assets/clinic/antiage_face.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/antiage_face.png'),
   },
   {
     key: 'direction_contour',
@@ -66,7 +90,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Направления',
     recommendedRatio: '4:3',
     description: 'Четкий контур овала лица, угол нижней челюсти, шея',
-    defaultSrc: '/assets/clinic/contour_jaw.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/contour_jaw.png'),
   },
   {
     key: 'direction_cream',
@@ -74,7 +98,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Направления',
     recommendedRatio: '16:9 (широкое)',
     description: 'Текстура питательного крема, шелковая вуаль',
-    defaultSrc: '/assets/clinic/cream_swirl.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/cream_swirl.png'),
   },
   {
     key: 'offer_lip',
@@ -82,7 +106,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Специальное предложение',
     recommendedRatio: '4:3',
     description: 'Деликатная естественная форма губ и подбородка',
-    defaultSrc: '/assets/clinic/profile_lip.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/profile_lip.png'),
   },
   {
     key: 'offer_wave',
@@ -90,7 +114,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Специальное предложение',
     recommendedRatio: '4:3',
     description: 'Волна шелковистой текстуры крема',
-    defaultSrc: '/assets/clinic/cream_wave.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/cream_wave.png'),
   },
   {
     key: 'offer_tone',
@@ -98,7 +122,7 @@ export const imageSlotsConfig: ImageSlotMeta[] = [
     section: 'Специальное предложение',
     recommendedRatio: '4:3',
     description: 'Мягкий пудровый тон бархатистой кожи',
-    defaultSrc: '/assets/clinic/tone_texture.png',
+    defaultSrc: resolveAssetUrl('assets/clinic/tone_texture.png'),
   },
 ];
 
@@ -279,9 +303,9 @@ export function resetAllStoredImages(): void {
 
 export function getEffectiveImage(slotKey: ImageSlotKey): string {
   const custom = getStoredImage(slotKey);
-  if (custom) return custom;
+  if (custom) return resolveAssetUrl(custom);
   const config = imageSlotsConfig.find((s) => s.key === slotKey);
-  return config ? config.defaultSrc : '/assets/aistudio/image_72db1020.png';
+  return config ? resolveAssetUrl(config.defaultSrc) : resolveAssetUrl('assets/aistudio/image_72db1020.png');
 }
 
 /**

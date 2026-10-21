@@ -1,3 +1,5 @@
+import { resolveAssetUrl } from '../utils/mediaStorage.ts';
+
 export interface ClinicInfo {
   name: string;
   tagline: string;
@@ -214,7 +216,7 @@ export const doctorsCatalog: DoctorProfile[] = [
     education: "Первый МГМУ им. И.М. Сеченова, клиническая ординатура по дерматовенерологии, международный тренер по SMAS и RF технологиям",
     specialties: ["SMAS-лифтинг Ultraformer", "Сложная контурная пластика Full Face", "Нитевой лифтинг Aptos", "Радиочастотное ремоделирование"],
     bio: "Эксперт в области гармонизации внешности без гиперкоррекции. Убеждена, что лучшая работа косметолога — та, о которой никто не догадается, но все заметят отдохнувший и сияющий вид.",
-    photoUrl: "/assets/aistudio/image_72db1020.png",
+    photoUrl: resolveAssetUrl('assets/aistudio/image_72db1020.png'),
   },
   {
     id: "dr-anna-sokolova",
@@ -224,7 +226,7 @@ export const doctorsCatalog: DoctorProfile[] = [
     education: "РНИМУ им. Н.И. Пирогова, стажировка в клиниках эстетической дерматологии (Швейцария, Германия)",
     specialties: ["Фототерапия BBL Hero", "Лечение сложных форм пигментации и сосудистых патологий", "Биоревитализация и полинуклеотиды"],
     bio: "Специализируется на идеальном качестве кожи, лечении розацеа и фотостарения с использованием аппаратных протоколов последнего поколения.",
-    photoUrl: "/assets/aistudio/image_72db1020.png",
+    photoUrl: resolveAssetUrl('assets/aistudio/image_72db1020.png'),
   },
   {
     id: "dr-marina-belova",
@@ -234,7 +236,7 @@ export const doctorsCatalog: DoctorProfile[] = [
     education: "МГМСУ им. А.И. Евдокимова, сертификация по превентивной и интегративной anti-age медицине PreventAge",
     specialties: ["Интеллектуальная ботулинотерапия", "HydraFacial MD Platinum", "Ферментотерапия DMK", "Коллагенотерапия Nithya & Collost"],
     bio: "Индивидуально подбирает терапевтические и уходовые протоколы, воздействуя на клеточном уровне для долговременного сияния и здоровья эпидермиса.",
-    photoUrl: "/assets/aistudio/image_72db1020.png",
+    photoUrl: resolveAssetUrl('assets/aistudio/image_72db1020.png'),
   },
 ];
 
