@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header, PageId } from './components/Header.tsx';
 import { Footer } from './components/Footer.tsx';
 import { HomeView } from './views/HomeView.tsx';
@@ -14,6 +14,7 @@ import { ContactsView } from './views/ContactsView.tsx';
 import { BookingModal } from './components/BookingModal.tsx';
 import { ArtDirectionModal } from './components/ArtDirectionModal.tsx';
 import { PhotoManagerModal } from './components/PhotoManagerModal.tsx';
+import { getCustomPhotosList } from './utils/githubSync.ts';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageId>('home');
@@ -23,6 +24,16 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isArtDirectionOpen, setIsArtDirectionOpen] = useState<boolean>(false);
   const [isPhotoManagerOpen, setIsPhotoManagerOpen] = useState<boolean>(false);
+  const [customPhotosCount, setCustomPhotosCount] = useState<number>(0);
+
+  useEffect(() => {
+    const updateCount = () => {
+      setCustomPhotosCount(getCustomPhotosList().length);
+    };
+    updateCount();
+    window.addEventListener('skinclean_image_updated', updateCount);
+    return () => window.removeEventListener('skinclean_image_updated', updateCount);
+  }, []);
 
   const handleOpenBooking = (serviceId?: string, doctorId?: string) => {
     setBookingServiceId(serviceId);
@@ -118,16 +129,26 @@ export default function App() {
         onClose={() => setIsArtDirectionOpen(false)}
       />
 
-      {/* Floating Action Button for Instant Photo Customization */}
-      <aside aria-label="Быстрые действия" className="fixed bottom-6 right-6 z-40">
+      {/* Floating Action Button for Instant Photo Customization & GitHub Sync */}
+      <aside aria-label="Быстрые действия" className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
+        {customPhotosCount > 0 && (
+          <div className="bg-[#FAF4EB] border border-[#D8C7B0] px-3.5 py-1.5 rounded-xl shadow-lg text-[11px] text-[#5A4D41] flex items-center gap-1.5 animate-bounce">
+            <span className="w-2 h-2 rounded-full bg-amber-600 animate-ping" />
+            <span>Нажмите, чтобы фото открылись на других ноутбуках!</span>
+          </div>
+        )}
         <button
           type="button"
           onClick={() => setIsPhotoManagerOpen(true)}
-          className="flex items-center gap-2.5 px-4 py-3 bg-[#1C1917] hover:bg-[#342D27] text-white text-xs sm:text-sm font-medium rounded-full shadow-2xl border border-white/20 transition-all hover:scale-105 cursor-pointer backdrop-blur-md"
-          title="Загрузить свои фотографии в любые блоки сайта"
+          className={`flex items-center gap-2.5 px-4 py-3 text-white text-xs sm:text-sm font-medium rounded-full shadow-2xl border transition-all hover:scale-105 cursor-pointer backdrop-blur-md ${
+            customPhotosCount > 0
+              ? 'bg-[#8C6D46] hover:bg-[#735835] border-[#E2CEB5]/50 ring-2 ring-[#8C6D46]/30'
+              : 'bg-[#1C1917] hover:bg-[#342D27] border-white/20'
+          }`}
+          title="Управление фотографиями клиники и синхронизация с GitHub"
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-[#D5B48A] animate-pulse" />
-          <span>Загрузить свои фото</span>
+          <span className={`w-2.5 h-2.5 rounded-full ${customPhotosCount > 0 ? 'bg-amber-300 animate-pulse' : 'bg-[#D5B48A]'}`} />
+          <span>{customPhotosCount > 0 ? `Сохранить фото в GitHub (${customPhotosCount})` : 'Загрузить свои фото'}</span>
         </button>
       </aside>
 
