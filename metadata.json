@@ -1,0 +1,6 @@
+{
+  "name": "Skin Clean — Клиника эстетической косметологии",
+  "description": "Премиальная клиника эстетической и аппаратной косметологии Skin Clean. Естественная красота, инновационные методики и экспертная медицина.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
