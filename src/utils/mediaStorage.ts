@@ -1,6 +1,8 @@
+export const ASSET_CACHE_KEY = 'v_20261021_highres';
+
 /**
  * Resolves an asset path to support deployment on any subpath (e.g. GitHub Pages /skin-clean/)
- * or root domain without broken absolute URLs.
+ * or root domain without broken absolute URLs, with cache-busting to guarantee crisp images.
  */
 export function resolveAssetUrl(path: string): string {
   if (!path) return '';
@@ -13,13 +15,16 @@ export function resolveAssetUrl(path: string): string {
     return path;
   }
   const cleanPath = path.replace(/^(\.\/|\/)+/, '');
+  const separator = cleanPath.includes('?') ? '&' : '?';
+  const pathWithVersion = `${cleanPath}${separator}v=${ASSET_CACHE_KEY}`;
+
   // Vite sets import.meta.env.BASE_URL to './' or subpath during build
   const metaEnv = typeof import.meta !== 'undefined' && 'env' in import.meta 
     ? (import.meta as { env?: { BASE_URL?: string } }).env 
     : undefined;
   const base = metaEnv?.BASE_URL || './';
   const prefix = base.endsWith('/') ? base : `${base}/`;
-  return `${prefix}${cleanPath}`;
+  return `${prefix}${pathWithVersion}`;
 }
 
 export type ImageSlotKey =

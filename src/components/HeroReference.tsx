@@ -36,12 +36,12 @@ export const HeroReference: React.FC<HeroReferenceProps> = ({
         <img
           src={src}
           alt="Skin Clean — эстетическая косметология"
-          className="w-full h-full object-cover filter brightness-[0.92] contrast-[1.02]"
+          className="w-full h-full object-cover"
           referrerPolicy="no-referrer"
         />
 
-        {/* Contrast Scrim for absolute legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/95 via-black/35 to-black/45" />
+        {/* Subtle Scrim without blurring the photo */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1C1917]/90 via-transparent to-black/25 pointer-events-none" />
 
         {/* Hidden File Input for Direct Hero Upload */}
         <input
@@ -78,16 +78,16 @@ export const HeroReference: React.FC<HeroReferenceProps> = ({
           )}
         </div>
 
-        {/* Hero Top & Middle Typography Layer matching reference exactly */}
+        {/* Hero Top & Middle Typography Layer matching reference exactly - SHARP, NO BLUR */}
         <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 md:p-14 lg:p-20 max-w-7xl mx-auto z-10 pointer-events-none">
-          {/* Top Brand Headline: SKIN — clean (SKIN in uppercase as in logo) */}
+          {/* Top Brand Headline: SKIN — clean (Crystal clear vector typography without drop shadow blur) */}
           <div className="pt-4 sm:pt-8">
-            <h1 className="flex items-center gap-4 sm:gap-7 md:gap-10 text-white tracking-tight">
-              <span className="font-sans font-light tracking-[0.22em] text-5xl sm:text-7xl md:text-8xl lg:text-9xl drop-shadow-md uppercase">
+            <h1 className="flex items-center gap-4 sm:gap-7 md:gap-10 text-white tracking-tight select-none">
+              <span className="font-sans font-light tracking-[0.22em] text-5xl sm:text-7xl md:text-8xl lg:text-9xl uppercase text-white antialiased">
                 SKIN
               </span>
-              <span className="w-12 sm:w-24 md:w-36 h-[2px] sm:h-[2.5px] bg-white inline-block shrink-0 shadow-sm" />
-              <span className="font-script italic font-normal text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] text-white/95 drop-shadow-md">
+              <span className="w-12 sm:w-24 md:w-36 h-[2px] sm:h-[2.5px] bg-white inline-block shrink-0" />
+              <span className="font-script italic font-normal text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] text-white antialiased">
                 clean
               </span>
             </h1>
