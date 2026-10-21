@@ -14,7 +14,7 @@ import { ContactsView } from './views/ContactsView.tsx';
 import { BookingModal } from './components/BookingModal.tsx';
 import { ArtDirectionModal } from './components/ArtDirectionModal.tsx';
 import { PhotoManagerModal } from './components/PhotoManagerModal.tsx';
-import { getCustomPhotosList } from './utils/githubSync.ts';
+import { getCustomPhotosList, syncCustomPhotosToGitHub } from './utils/githubSync.ts';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<PageId>('home');
@@ -25,6 +25,11 @@ export default function App() {
   const [isArtDirectionOpen, setIsArtDirectionOpen] = useState<boolean>(false);
   const [isPhotoManagerOpen, setIsPhotoManagerOpen] = useState<boolean>(false);
   const [customPhotosCount, setCustomPhotosCount] = useState<number>(0);
+  const [syncState, setSyncState] = useState<{
+    isSyncing: boolean;
+    message: string | null;
+    success?: boolean;
+  }>({ isSyncing: false, message: null });
 
   useEffect(() => {
     const updateCount = () => {
@@ -34,6 +39,26 @@ export default function App() {
     window.addEventListener('skinclean_image_updated', updateCount);
     return () => window.removeEventListener('skinclean_image_updated', updateCount);
   }, []);
+
+  const triggerSync = async () => {
+    setSyncState({ isSyncing: true, message: 'Сохранение ваших четких фото в GitHub...' });
+    const res = await syncCustomPhotosToGitHub((progress) => {
+      setSyncState({ isSyncing: true, message: progress.message });
+    });
+    if (res.success) {
+      setSyncState({
+        isSyncing: false,
+        message: `✅ Успешно! ${res.count} фото сохранены в GitHub. На ноутбуке парня обновите страницу — там теперь четкие фото!`,
+        success: true,
+      });
+    } else {
+      setSyncState({
+        isSyncing: false,
+        message: `Ошибка: ${res.error || 'Не удалось сохранить'}`,
+        success: false,
+      });
+    }
+  };
 
   const handleOpenBooking = (serviceId?: string, doctorId?: string) => {
     setBookingServiceId(serviceId);
@@ -64,6 +89,44 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBF9F5] text-[#1C1917] selection:bg-[#E8DEC8] selection:text-[#1C1917]">
+      {/* Top Notification Banner if Custom Photos are on this device */}
+      {customPhotosCount > 0 && (
+        <div className="bg-[#8C6D46] text-white px-4 py-2.5 text-xs sm:text-sm font-medium flex flex-wrap items-center justify-between gap-3 shadow-md sticky top-0 z-50">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-300 animate-pulse shrink-0" />
+            <span>
+              {syncState.message ? (
+                syncState.message
+              ) : (
+                <>
+                  <strong>На этом ПК обнаружены ваши четкие фото ({customPhotosCount} шт.).</strong> Чтобы они открывались у парня и на всех устройствах:
+                </>
+              )}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            {!syncState.success && (
+              <button
+                type="button"
+                onClick={triggerSync}
+                disabled={syncState.isSyncing}
+                className="px-3.5 py-1.5 bg-white text-[#1C1917] hover:bg-stone-100 font-semibold rounded-lg shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {syncState.isSyncing ? 'Сохранение...' : 'Сохранить фото в GitHub'}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setIsPhotoManagerOpen(true)}
+              className="px-2.5 py-1.5 bg-black/20 hover:bg-black/30 text-white rounded-lg transition-colors cursor-pointer"
+            >
+              Панель фото
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Universal Top Bar Header */}
       <Header
         currentPage={currentPage}
